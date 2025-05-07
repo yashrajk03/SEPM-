@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS_20" // Change this to match your Jenkins Node.js tool name
+        nodejs "NodeJS" // Use the exact name shown in Jenkins Global Tool Configuration
     }
 
     environment {
@@ -41,7 +41,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo '🚀 Deploying project...'
-                // Replace below with your actual deployment command (SCP, rsync, S3 upload, etc.)
                 bat 'echo Deploy step executed'
             }
         }
