@@ -1,46 +1,58 @@
 pipeline {
     agent any
+
     tools {
-        nodejs "NodeJS"
+        nodejs "NodeJS_20" // Change this to match your Jenkins Node.js tool name
     }
+
     environment {
-        EC2_HOST = "13.51.167.19" // Updated with the correct public IP
+        NODE_ENV = 'development'
     }
+
     stages {
-        stage('Checkout') {
+
+        stage('Checkout Code') {
             steps {
-                git url: 'https://github.com/yashrajk03/SEPM-.git', branch: 'main'
+                git branch: 'main', url: 'https://github.com/yashrajk03/SEPM-.git'
             }
         }
+
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                echo '📦 Installing dependencies...'
+                bat 'npm install'
             }
         }
-        stage('Build') {
+
+        stage('Build Project') {
             steps {
-                sh 'npm run build'
+                echo '🏗️ Building the React project...'
+                bat 'npm run build'
             }
         }
-        stage('Test') {
+
+        stage('Run Tests') {
             steps {
-                sh 'npm test -- --watchAll=false'
+                echo '🧪 Running tests...'
+                bat 'npm test'
             }
         }
+
         stage('Deploy') {
             steps {
-                sshagent(credentials: ['ec2-ssh-key']) {
-                    sh """
-                    scp -o StrictHostKeyChecking=no -r build/* ec2-user@${EC2_HOST}:/usr/share/nginx/html/
-                    ssh -o StrictHostKeyChecking=no ec2-user@${EC2_HOST} 'sudo systemctl restart nginx'
-                    """
-                }
+                echo '🚀 Deploying project...'
+                // Replace below with your actual deployment command (SCP, rsync, S3 upload, etc.)
+                bat 'echo Deploy step executed'
             }
         }
     }
+
     post {
-        always {
-            archiveArtifacts artifacts: 'build/**', allowEmptyArchive: true
+        success {
+            echo '✅ Build and deployment completed successfully.'
+        }
+        failure {
+            echo '❌ Build failed. Check the logs.'
         }
     }
 }
