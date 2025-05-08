@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EC2_USER = 'ec2-user'
-        EC2_HOST = 'your-ec2-public-ip'
+        EC2_HOST = 'http://13.51.167.19/'
         REMOTE_DIR = '/home/ec2-user/sepm-react'
         SSH_KEY_ID = 'ec2-ssh-key'
     }
